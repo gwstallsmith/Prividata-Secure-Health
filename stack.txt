@@ -5,6 +5,6 @@
 
 * Flask - Backend
 
-* OpenSSL with Python - Backend data security
+* OpenSSL with Python - Data security
 
 * HTML / CSS - Frontend
