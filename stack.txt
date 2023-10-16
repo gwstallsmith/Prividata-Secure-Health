@@ -1,0 +1,10 @@
+* Sqllite - Database
+
+* PythonAnywhere - Hosting
+* node.js - Hosting backup
+
+* Flask - Backend
+
+* OpenSSL with Python - Backend data security
+
+* HTML / CSS - Frontend
