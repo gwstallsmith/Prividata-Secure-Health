@@ -8,3 +8,64 @@
 * OpenSSL with Python - Data security
 
 * HTML / CSS - Frontend
+
+20 Example Entries:
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('John', 'Doe', 'Male', 35, 75.5, 175.2, 'No major health issues.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Jane', 'Smith', 'Female', 28, 62.1, 162.5, 'Allergies to peanuts.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Michael', 'Johnson', 'Male', 45, 82.3, 180.0, 'Hypertension and diabetes.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Emily', 'Davis', 'Female', 33, 68.7, 167.0, 'Asthma, occasional migraines.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Robert', 'Brown', 'Male', 52, 95.0, 185.5, 'History of heart disease.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Olivia', 'Martinez', 'Female', 24, 55.9, 160.3, 'No known health issues.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('William', 'Lee', 'Male', 41, 78.6, 178.9, 'Chronic back pain, seasonal allergies.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Sophia', 'Anderson', 'Female', 29, 61.2, 166.8, 'History of depression, currently under treatment.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Daniel', 'Harris', 'Male', 37, 85.2, 182.4, 'High cholesterol, family history of diabetes.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Ava', 'White', 'Female', 31, 66.5, 163.7, 'Previous surgeries: appendectomy, knee reconstruction.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('James', 'Taylor', 'Male', 40, 80.8, 176.3, 'History of allergies, no other major health issues.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Ella', 'Moore', 'Female', 27, 59.4, 158.1, 'Pregnant, routine check-ups.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Christopher', 'Johnson', 'Male', 55, 90.2, 182.0, 'High blood pressure, arthritis.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Mia', 'Thompson', 'Female', 22, 53.0, 165.5, 'Recovering from a recent surgery, no other health issues.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Matthew', 'Wilson', 'Male', 47, 88.9, 177.7, 'Type 2 diabetes, frequent migraines.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Chloe', 'Garcia', 'Female', 30, 66.8, 163.9, 'Allergic to shellfish, asthma.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('David', 'Miller', 'Male', 39, 76.5, 179.8, 'History of anxiety, currently on medication.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Lily', 'Wilson', 'Female', 36, 71.2, 165.2, 'Recovered from COVID-19, no other health issues.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Joseph', 'Anderson', 'Male', 42, 85.3, 181.1, 'Recent knee injury, undergoing physical therapy.');
+
+INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
+VALUES ('Avery', 'Jackson', 'Female', 26, 60.7, 162.0, 'No significant health issues reported.');
