@@ -9,6 +9,8 @@
 
 * HTML / CSS - Frontend
 
+*virtualenv - Environment Consistency
+
 20 Example Entries:
 INSERT INTO PatientInformation (First_Name, Last_Name, Gender, Age, Weight, Height, Health_History)
 VALUES ('John', 'Doe', 'Male', 35, 75.5, 175.2, 'No major health issues.');
