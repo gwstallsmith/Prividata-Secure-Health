@@ -27,7 +27,7 @@ def login():
         return render_template('login_success.html', user=user)
     else:
         # Simulate an incorrect login
-        return render_template('login_error.html')
+        return render_template('login_failure.html')
 
 def home():
     return render_template('login.html')
