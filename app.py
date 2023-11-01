@@ -1,33 +1,37 @@
 from flask import Flask, render_template, request, jsonify
+import sqlite3
 
 app = Flask(__name__)
 
-users = [
-    {'username': 'user1', 'password': 'password1'},
-    {'username': 'user2', 'password': 'password2'}
-]
 
 @app.route('/')
 def login_page():
     return render_template('login.html')
 
 @app.route('/', methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
+def check_credentials():
+    input_username = request.form['username']
+    input_password = request.form['password']
+    
+    with sqlite3.connect("db.sqlite3") as connection:
 
-    user = None
-    for u in users:
-        if u['username'] == username and u['password'] == password:
-            user = u
-            break
+        cursor = connection.cursor()
 
-    if user:
-        # Simulate a successful login
-        return render_template('login_success.html', user=user)
-    else:
-        # Simulate an incorrect login
-        return render_template('login_failure.html')
+        cursor.execute("SELECT * FROM Credentials WHERE username = ? AND password = ?", (input_username, input_password))
+
+        result = cursor.fetchone()
+
+        if result:
+            # Simulate a successful login
+            return render_template('login_success.html', user=result)
+        else:
+            # Simulate an incorrect login
+            return render_template('login_failure.html')
+        
+
+
+
+
 
 def home():
     return render_template('login.html')
