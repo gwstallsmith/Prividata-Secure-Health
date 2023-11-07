@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
 
+import hashlib
+
 app = Flask(__name__)
 
 
@@ -17,7 +19,7 @@ def check_credentials():
 
         cursor = connection.cursor()
 
-        cursor.execute("SELECT * FROM Credentials WHERE username = ? AND password = ?", (input_username, input_password))
+        cursor.execute("SELECT * FROM Credentials WHERE username = ? AND password = ?", (input_username, hash_password(input_password)))
 
         result = cursor.fetchone()
 
@@ -28,15 +30,43 @@ def check_credentials():
             # Simulate an incorrect login
             return render_template('sign_up.html')
         
+
+
+# Function hash ALL PASSWORDS in database
+def salt_passwords():
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT username, password FROM Credentials")
+        result = cursor.fetchall()
+
+        for user in result:
+            salted_password = hash_password(user[1])
+            cursor.execute("UPDATE Credentials SET password = ? WHERE username = ?", (salted_password, user[0]))
+
+
+
+# Function to get the result of hashing a password
+def hash_password(password):
+    # Encode for hashing to work
+    password = password.encode('utf-8')
+
+    hash = hashlib.sha256()         # Create Hashing object
+    hash.update(password)           # Apply hashing algorithm
+    hash_pass = hash.hexdigest()    # Use hex representation
+
+    return hash_pass
+
+        
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
     new_username = request.form['username']
     new_password = request.form['password']
 
+
     with sqlite3.connect("db.sqlite3") as connection:
         cursor = connection.cursor()
 
-        cursor.execute("SELECT * FROM Credentials WHERE username = ? AND password = ?", (new_username, new_password))
+        cursor.execute("SELECT * FROM Credentials WHERE username = ? AND password = ?", (new_username, hash_password(new_password)))
 
         result = cursor.fetchone()
 
@@ -48,8 +78,11 @@ def sign_up():
             cursor.execute("SELECT MAX(ID) FROM Credentials")
             new_ID = cursor.fetchone()[0] + 1
             
-            cursor.execute("INSERT INTO Credentials (ID, username, password) VALUES (?, ?, ?)", (new_ID, new_username, new_password))
+            cursor.execute("INSERT INTO Credentials (ID, username, password) VALUES (?, ?, ?)", (new_ID, new_username, hash_password(new_password)))
             return render_template('login_success.html', user=result)
+
+
+
 
 def home():
     return render_template('login.html')
