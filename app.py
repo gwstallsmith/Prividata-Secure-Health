@@ -8,7 +8,7 @@ app = Flask(__name__)
 def login_page():
     return render_template('login.html')
 
-@app.route('/', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def check_credentials():
     input_username = request.form['username']
     input_password = request.form['password']
@@ -26,18 +26,34 @@ def check_credentials():
             return render_template('login_success.html', user=result)
         else:
             # Simulate an incorrect login
-            return render_template('login_failure.html')
+            return render_template('sign_up.html')
         
+@app.route('/sign_up', methods=['POST'])
+def sign_up():
+    new_username = request.form['username']
+    new_password = request.form['password']
 
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
 
+        cursor.execute("SELECT * FROM Credentials WHERE username = ? AND password = ?", (new_username, new_password))
 
+        result = cursor.fetchone()
 
+        if result:
+            # Simulate a successful login
+            return render_template('login_success.html', user=result)
+        else:
+            # Input new user into database
+            cursor.execute("SELECT MAX(ID) FROM Credentials")
+            new_ID = cursor.fetchone()[0] + 1
+            
+            cursor.execute("INSERT INTO Credentials (ID, username, password) VALUES (?, ?, ?)", (new_ID, new_username, new_password))
+            return render_template('login_success.html', user=result)
 
 def home():
     return render_template('login.html')
 
-#def hello_world():
-#    return "Hello, world"
 
 if __name__ == '__main__':
     app.run()
