@@ -17,8 +17,12 @@
       <input type="text" id="inputUsername" name="username" required><br>
       <label for="inputPassword">Password:</label>
       <input type="password" id="inputPassword" name="password" required><br>
+      {% if error %}
+      <p style="color: red;">{{ error }}</p>
+      {% endif %}
       <input type="submit" value="Login">
   </form>
+
   <p id="messageSucc" class="message"></p>
 </body>
 
