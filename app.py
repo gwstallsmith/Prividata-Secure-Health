@@ -62,6 +62,9 @@ def sign_up():
     new_username = request.form['username']
     new_password = request.form['password']
 
+    first_name = request.form['firstname']
+    last_name = request.form['lastname']
+
 
     with sqlite3.connect("db.sqlite3") as connection:
         cursor = connection.cursor()
@@ -79,7 +82,10 @@ def sign_up():
             new_ID = cursor.fetchone()[0] + 1
             
             cursor.execute("INSERT INTO Credentials (ID, username, password) VALUES (?, ?, ?)", (new_ID, new_username, hash_password(new_password)))
+            cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (new_ID, first_name, last_name))
+        
             return render_template('login_success.html', user=result)
+        
 
 def remove_user(id):
     with sqlite3.connect("db.sqlite3") as connection:
