@@ -86,6 +86,15 @@ def sign_up():
         
             return render_template('login_success.html', user=result)
         
+@app.route('/patient_info', methods=['POST'])
+def display_info():
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+        
+        # IF cookie says admin display all users
+        # ELSE cookie says no admin display single user
+
+
 
 def remove_user(id):
     with sqlite3.connect("db.sqlite3") as connection:
