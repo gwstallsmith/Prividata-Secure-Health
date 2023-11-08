@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, intial-scale=1.0" user-scalable="no">
+  <title>Prividata Secure Health</title>
+  <style>
+    /* CSS for styling the row */
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px;
+    }
+</style>
+</head>
+
+
+
+<body>
+    <div class="info-row" method="POST", action="/patient_info">
+        {% for row in data %}
+            <div>
+                <h3>Name</h3>
+                <p>{{ row[0] }}</p>
+            </div>
+            <div>
+                <h3>Age</h3>
+                <p>{{ row[1] }}</p>
+            </div>
+            <div>
+                <h3>Gender</h3>
+                <p>{{ row[2] }}</p>
+            </div>
+            <div>
+                <h3>Weight</h3>
+                <p>{{ row[3] }}</p>
+            </div>
+
+            <div>
+                <h3>Height</h3>
+                <p>{{ row[4] }}</p>
+            </div>
+            <div>
+                <h3>Health History</h3>
+                <p>{{ row[5] }}</p>
+            </div>
+
+        {% endfor %}
+    </div>
+</body>
+
+</html>
