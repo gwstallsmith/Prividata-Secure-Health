@@ -81,7 +81,10 @@ def sign_up():
             cursor.execute("INSERT INTO Credentials (ID, username, password) VALUES (?, ?, ?)", (new_ID, new_username, hash_password(new_password)))
             return render_template('login_success.html', user=result)
 
-
+def remove_user(id):
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM Credentials WHERE ID = ?", (id,))
 
 
 def home():
