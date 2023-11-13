@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, make_response
 import sqlite3
 
 import hashlib
@@ -25,7 +25,14 @@ def check_credentials():
 
         if result:
             # Simulate a successful login
-            return render_template('login_success.html', user=result)
+            user = result
+            # Store user information in a cookie
+            response = make_response(render_template('login_success.html', user=user))
+
+            response.set_cookie('ID', str(user[0]))
+            response.set_cookie('Username', str(user[1]))
+
+            return response
         else:
             # Simulate an incorrect login
             return render_template('sign_up.html')
@@ -75,6 +82,13 @@ def sign_up():
 
         if result:
             # Simulate a successful login
+            user = result
+            # Store user information in a cookie
+            response = make_response(render_template('login_success.html', user=user))
+
+            response.set_cookie('ID', str(user[0]))
+            response.set_cookie('Username', str(user[1]))
+            
             return render_template('login_success.html', user=result)
         else:
             # Input new user into database
