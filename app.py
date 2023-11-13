@@ -6,23 +6,26 @@ import hashlib
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def login_page():
-    return render_template('login.html')
+    return render_template('login.html', error = None)
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def check_credentials():
-    input_username = request.form['username']
-    input_password = request.form['password']
+    error = None
+    if request.method == 'POST':
+        input_username = request.form['username']
+        input_password = request.form['password']
+        
+        with sqlite3.connect("db.sqlite3") as connection:
+
+            cursor = connection.cursor()
+
+
+            cursor.execute("SELECT * FROM Credentials WHERE Username = ? AND Password = ?", (input_username, hash_password(input_password)))
     
-    with sqlite3.connect("db.sqlite3") as connection:
-
-        cursor = connection.cursor()
-
-        cursor.execute("SELECT * FROM Credentials WHERE Username = ? AND Password = ?", (input_username, hash_password(input_password)))
-
-        result = cursor.fetchone()
-
+            result = cursor.fetchone()
+            
         if result:
             # Simulate a successful login
             user = result
@@ -36,6 +39,8 @@ def check_credentials():
         else:
             # Simulate an incorrect login
             return render_template('sign_up.html')
+
+
         
 
 
