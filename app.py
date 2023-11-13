@@ -90,13 +90,14 @@ def sign_up():
         
             return render_template('login_success.html', user=result)
         
-@app.route('/patient_info', methods=['POST'])
+@app.route('/patient_info', methods=['GET', 'POST'])
 def display_info():
     with sqlite3.connect("db.sqlite3") as connection:
         cursor = connection.cursor()
         
         # IF cookie says admin display all users
         # ELSE cookie says no admin display single user
+        return render_template('patient_info.html')
 
 
 
