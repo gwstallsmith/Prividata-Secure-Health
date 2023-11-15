@@ -42,7 +42,8 @@ def check_credentials():
             return response
         else:
             # Simulate an incorrect login
-            return render_template('sign_up.html')
+            error = "Invalide user credentials"
+    return render_template('login.html', error=error)
 
 
 # Function hash ALL PASSWORDS in database
