@@ -7,11 +7,15 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['GET'])
+def index_page():
+    return render_template('index.html', error = None)
+
+
+@app.route('/login', methods=['GET'])
 def login_page():
     return render_template('login.html', error = None)
 
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/check_credentials', methods=['GET', 'POST'])
 def check_credentials():
     error = None
     if request.method == 'POST':
@@ -30,7 +34,7 @@ def check_credentials():
             # Simulate a successful login
             user = result
             # Store user information in a cookie
-            response = make_response(render_template('login_success.html', user=user))
+            response = make_response(render_template('index.html', user=user))
 
             response.set_cookie('ID', str(user[0]))
             response.set_cookie('Username', str(user[1]))
@@ -82,14 +86,13 @@ def sign_up():
 
         if result:
             # Simulate a successful login
-            user = result
             # Store user information in a cookie
-            response = make_response(render_template('login_success.html', user=user))
+            response = make_response(render_template('index.html', user=result))
 
-            response.set_cookie('ID', str(user[0]))
-            response.set_cookie('Username', str(user[1]))
+            response.set_cookie('ID', str(result[0]))
+            response.set_cookie('Username', str(result[1]))
             
-            return render_template('login_success.html', user=result)
+            return response
         else:
             # Input new user into database
             cursor.execute("SELECT MAX(ID) FROM Credentials")
@@ -141,7 +144,7 @@ def home():
 @app.route('/logout')
 def logout():
     # Clear the cookies by creating a response and deleting the cookies
-    response = make_response(redirect(url_for('login_page')))  # Redirect to login page
+    response = make_response(redirect(url_for('index_page')))  # Redirect to home page
     response.set_cookie('ID', '', expires = 0)  # Clear 'ID' cookie
     response.set_cookie('Username', '', expires = 0)  # Clear 'Username' cookie
     return response
