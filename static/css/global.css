@@ -1,0 +1,61 @@
+/* CSS for styling the box */
+.user-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* CSS for styling the title */
+.user-box h2 {
+    margin-top: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* CSS for styling the row within each box */
+.user-box .info-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* CSS for individual entries within each row */
+.user-box .info-row > div {
+    width: 48%; /* Adjust the width as needed */
+    margin-bottom: 10px;
+}
+
+/* Basic styles for the navigation bar */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #333;
+    color: white;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    display: inline-block;
+}
+
+nav ul li a:hover {
+    background-color: #555;
+}

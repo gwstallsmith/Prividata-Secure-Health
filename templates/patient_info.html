@@ -5,40 +5,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, intial-scale=1.0" user-scalable="no">
   <title>Prividata Secure Health</title>
-  <style>
-    /* CSS for styling the box */
-.user-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-/* CSS for styling the title */
-.user-box h2 {
-    margin-top: 0;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* CSS for styling the row within each box */
-.user-box .info-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-/* CSS for individual entries within each row */
-.user-box .info-row > div {
-    width: 48%; /* Adjust the width as needed */
-    margin-bottom: 10px;
-}
-</style>
+  <link rel="stylesheet" href="/static/css/global.css">
 </head>
 
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/patient_info">Patient Information</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="/logout">Logoff</a></li>
+    </ul>
+</nav>
+
 <body>
-    <form action="/logout" method="get">
-        <button type="submit">Logout</button>
-    </form>
+
     <div class="info-container">
         {% if user %}
             <div class="user-box">
