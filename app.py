@@ -34,7 +34,7 @@ def check_credentials():
             # Simulate a successful login
             user = result
             # Store user information in a cookie
-            response = make_response(render_template('index.html', user=user))
+            response = make_response(render_template('index.html', user=user, logged_in=True))
 
             response.set_cookie('ID', str(user[0]))
             response.set_cookie('Username', str(user[1]))
@@ -42,7 +42,7 @@ def check_credentials():
             return response
         else:
             # Simulate an incorrect login
-            error = "Invalide user credentials"
+            error = "Invalid user credentials"
     return render_template('login.html', error=error)
 
 
@@ -70,7 +70,7 @@ def hash_password(password):
     return hash_pass
 
 @app.route('/sign_up')
-def sign_up_user():
+def sign_up_form():
     return render_template('sign_up.html')
         
 @app.route('/sign_up', methods=['POST'])
@@ -88,15 +88,18 @@ def sign_up():
 
         result = cursor.fetchone()
 
+        # When the user signing up exists in db
         if result:
             # Simulate a successful login
             # Store user information in a cookie
-            response = make_response(render_template('index.html', user=result))
+            response = make_response(render_template('index.html', user=result, logged_in=True))
 
             response.set_cookie('ID', str(result[0]))
             response.set_cookie('Username', str(result[1]))
             
             return response
+        # Otherwise user does not exist
+        # Need to sign them up
         else:
             # Input new user into database
             cursor.execute("SELECT MAX(ID) FROM Credentials")
@@ -104,8 +107,13 @@ def sign_up():
             
             cursor.execute("INSERT INTO Credentials (ID, Username, Password) VALUES (?, ?, ?)", (new_ID, new_username, hash_password(new_password)))
             cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (new_ID, first_name, last_name))
-        
-            return render_template('login_success.html', user=result)
+
+            response = make_response(render_template('index.html', user=result, logged_in=True))
+
+            response.set_cookie('ID', new_ID)
+            response.set_cookie('Username', new_username)
+            
+        return render_template('index.html', user=result)
 
 
 @app.route('/patient_info', methods=['GET', 'POST'])
