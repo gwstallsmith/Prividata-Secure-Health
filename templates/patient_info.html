@@ -6,49 +6,113 @@
   <meta name="viewport" content="width=device-width, intial-scale=1.0" user-scalable="no">
   <title>Prividata Secure Health</title>
   <style>
-    /* CSS for styling the row */
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin: 10px;
-    }
+    /* CSS for styling the box */
+.user-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* CSS for styling the title */
+.user-box h2 {
+    margin-top: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* CSS for styling the row within each box */
+.user-box .info-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* CSS for individual entries within each row */
+.user-box .info-row > div {
+    width: 48%; /* Adjust the width as needed */
+    margin-bottom: 10px;
+}
 </style>
 </head>
 
-
-
 <body>
-    <div class="info-row" method="POST", action="/patient_info">
-        {% for row in data %}
-            <div>
-                <h3>Name</h3>
-                <p>{{ row[0] }}</p>
+    <form action="/logout" method="get">
+        <button type="submit">Logout</button>
+    </form>
+    <div class="info-container">
+        {% if user %}
+            <div class="user-box">
+                <h2>User Information</h2>
+                <div class="info-row">
+                    <div>
+                        <h3>First Name</h3>
+                        <p>{{ user[1] }}</p>
+                    </div>
+                    <div>
+                        <h3>Last Name</h3>
+                        <p>{{ user[2] }}</p>
+                    </div>
+                    <div>
+                        <h3>Age</h3>
+                        <p>{{ user[3] }}</p>
+                    </div>
+                    <div>
+                        <h3>Gender</h3>
+                        <p>{{ user[4] }}</p>
+                    </div>
+                    <div>
+                        <h3>Weight</h3>
+                        <p>{{ user[5] }}</p>
+                    </div>
+                    <div>
+                        <h3>Height</h3>
+                        <p>{{ user[6] }}</p>
+                    </div>
+                    <div>
+                        <h3>Health History</h3>
+                        <p>{{ user[7] }}</p>
+                    </div>
+                    <!-- Include other fields here -->
+                </div>
             </div>
-            <div>
-                <h3>Age</h3>
-                <p>{{ row[1] }}</p>
-            </div>
-            <div>
-                <h3>Gender</h3>
-                <p>{{ row[2] }}</p>
-            </div>
-            <div>
-                <h3>Weight</h3>
-                <p>{{ row[3] }}</p>
-            </div>
-
-            <div>
-                <h3>Height</h3>
-                <p>{{ row[4] }}</p>
-            </div>
-            <div>
-                <h3>Health History</h3>
-                <p>{{ row[5] }}</p>
-            </div>
-
-        {% endfor %}
+        {% elif users %}
+            {% for row in users %}
+                <div class="user-box">
+                    <h2>User Information</h2>
+                    <div class="info-row">
+                        <div>
+                            <h3>First Name</h3>
+                            <p>{{ row[1] }}</p>
+                        </div>
+                        <div>
+                            <h3>Last Name</h3>
+                            <p>{{ row[2] }}</p>
+                        </div>
+                        <div>
+                            <h3>Age</h3>
+                            <p>{{ row[3] }}</p>
+                        </div>
+                        <div>
+                            <h3>Gender</h3>
+                            <p>{{ row[4] }}</p>
+                        </div>
+                        <div>
+                            <h3>Weight</h3>
+                            <p>{{ row[5] }}</p>
+                        </div>
+                        <div>
+                            <h3>Height</h3>
+                            <p>{{ row[6] }}</p>
+                        </div>
+                        <div>
+                            <h3>Health History</h3>
+                            <p>{{ row[7] }}</p>
+                        </div>
+                        <!-- Include other fields for all users -->
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
 </body>
 

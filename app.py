@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
 
 import hashlib
@@ -9,6 +9,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def login_page():
     return render_template('login.html', error = None)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def check_credentials():
@@ -21,19 +22,23 @@ def check_credentials():
 
             cursor = connection.cursor()
 
-
             cursor.execute("SELECT * FROM Credentials WHERE Username = ? AND Password = ?", (input_username, hash_password(input_password)))
-
+    
             result = cursor.fetchone()
+            
+        if result:
+            # Simulate a successful login
+            user = result
+            # Store user information in a cookie
+            response = make_response(render_template('login_success.html', user=user))
 
-            if result:
-                # Simulate a successful login
-                return render_template('login_success.html', user=result)
-            else:
-                # Simulate an incorrect login
-                error = "Invalid user credentials"
-    return render_template('login.html', error=error)
-        
+            response.set_cookie('ID', str(user[0]))
+            response.set_cookie('Username', str(user[1]))
+
+            return response
+        else:
+            # Simulate an incorrect login
+            return render_template('sign_up.html')
 
 
 # Function hash ALL PASSWORDS in database
@@ -46,7 +51,6 @@ def salt_passwords():
         for user in result:
             salted_password = hash_password(user[1])
             cursor.execute("UPDATE Credentials SET Password = ? WHERE Username = ?", (salted_password, user[0]))
-
 
 
 # Function to get the result of hashing a password
@@ -69,7 +73,6 @@ def sign_up():
     first_name = request.form['firstname']
     last_name = request.form['lastname']
 
-
     with sqlite3.connect("db.sqlite3") as connection:
         cursor = connection.cursor()
 
@@ -79,6 +82,13 @@ def sign_up():
 
         if result:
             # Simulate a successful login
+            user = result
+            # Store user information in a cookie
+            response = make_response(render_template('login_success.html', user=user))
+
+            response.set_cookie('ID', str(user[0]))
+            response.set_cookie('Username', str(user[1]))
+            
             return render_template('login_success.html', user=result)
         else:
             # Input new user into database
@@ -89,16 +99,33 @@ def sign_up():
             cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (new_ID, first_name, last_name))
         
             return render_template('login_success.html', user=result)
-        
+
+
 @app.route('/patient_info', methods=['GET', 'POST'])
 def display_info():
-    with sqlite3.connect("db.sqlite3") as connection:
-        cursor = connection.cursor()
-        
-        # IF cookie says admin display all users
-        # ELSE cookie says no admin display single user
-        return render_template('patient_info.html')
+    # Check if 'ID' and 'Username' cookies are present
+    if 'ID' in request.cookies and 'Username' in request.cookies:
+        user_id = request.cookies.get('ID')
+        username = request.cookies.get('Username')
 
+        with sqlite3.connect("db.sqlite3") as connection:
+            cursor = connection.cursor()
+
+            # Check if the user is an admin (you might have a column like 'IsAdmin' in your Credentials table)
+            cursor.execute("SELECT * FROM Credentials WHERE ID = ?", (user_id,))
+            user = cursor.fetchone()
+
+            if user and user[3]:
+                # User is an admin, display all users
+                all_users = cursor.execute("SELECT * FROM PatientInformation").fetchall()
+                return render_template('patient_info.html', users = all_users)
+            else:
+                # User is not an admin, display single user
+                user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
+                return render_template('patient_info.html', user = user_data)
+    else:
+        # If cookies are not present, redirect to login page or handle the situation accordingly
+        return redirect('/login')
 
 
 def remove_user(id):
@@ -109,6 +136,15 @@ def remove_user(id):
 
 def home():
     return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    # Clear the cookies by creating a response and deleting the cookies
+    response = make_response(redirect(url_for('login_page')))  # Redirect to login page
+    response.set_cookie('ID', '', expires = 0)  # Clear 'ID' cookie
+    response.set_cookie('Username', '', expires = 0)  # Clear 'Username' cookie
+    return response
 
 
 if __name__ == '__main__':
