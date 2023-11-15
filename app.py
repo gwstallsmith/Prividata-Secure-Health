@@ -69,6 +69,9 @@ def hash_password(password):
 
     return hash_pass
 
+@app.route('/sign_up')
+def sign_up_user():
+    return render_template('sign_up.html')
         
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
