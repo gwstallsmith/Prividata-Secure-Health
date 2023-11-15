@@ -189,7 +189,7 @@ def generateMoreUsers():
             cursor.execute("SELECT MAX(ID) FROM Credentials")
             new_ID = cursor.fetchone()[0] + 1
             
-            cursor.execute("INSERT INTO Credentials (ID, Username, Password) VALUES (?, ?, ?)", (new_ID, first_name + last_name + str(new_ID), hash_password(first_name + last_name)))
+            cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?)", (new_ID, first_name + last_name + str(new_ID), hash_password(first_name + last_name), False))
             cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (new_ID, first_name, last_name, gender, age, weight, height, history))
 
 
