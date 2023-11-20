@@ -9,9 +9,16 @@
 </head>
 
 {% include 'navbar.html' %}
-
 <body>
-  <h1>Welcome to Prividata Secure Health</h1>
+  {% if request.cookies.get('ID') or logged_in %}
+      <h1>Welcome, {{ user[1] if logged_in else request.cookies.get('Username')}}!</h1>
+      <!-- Your content for logged-in users here -->
+  {% else %}
+    <h1>Welcome to Prividata Secure Health</h1>
+      <!-- Your content for guests here -->
+  {% endif %}
+</body>
+<body>
   <p>Prividata Secure Health is an encrypted database designed to securely store medical records.</p>
   <p>Our platform utilizes state-of-the-art encryption algorithms to ensure the confidentiality and integrity of your medical information. With strict access controls and comprehensive security measures, we prioritize the protection of sensitive data. Whether you're a healthcare provider or an individual seeking a secure repository for medical records, Prividata Secure Health offers a reliable solution.</p>
 
@@ -20,3 +27,4 @@
 
 
 </html>
+

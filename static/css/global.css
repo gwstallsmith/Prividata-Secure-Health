@@ -31,7 +31,6 @@ body {
     margin: 0;
     padding: 0;
 }
-
 nav {
     background-color: #333;
     color: white;
@@ -45,8 +44,9 @@ nav ul {
 }
 
 nav ul li {
-    display: inline;
+    display: inline-block;
     margin: 0 10px;
+    position: relative;
 }
 
 nav ul li a {
@@ -57,5 +57,33 @@ nav ul li a {
 }
 
 nav ul li a:hover {
+    background-color: #555;
+}
+
+/* Dropdown styles */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 160px;
+    z-index: 1;
+    padding: 0;
+    margin-top: 0px;
+    border-radius: 0 0 5px 5px;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 10px 15px;
+    display: block;
+    text-decoration: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Style the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
     background-color: #555;
 }

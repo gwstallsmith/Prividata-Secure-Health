@@ -8,7 +8,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index_page():
-    return render_template('index.html', error = None)
+    response = make_response(render_template('index.html', error = None))
+    return response
 
 
 @app.route('/login', methods=['GET'])
@@ -43,6 +44,7 @@ def check_credentials():
         else:
             # Simulate an incorrect login
             error = "Invalid user credentials"
+        
     return render_template('login.html', error=error)
 
 
@@ -96,8 +98,7 @@ def sign_up():
 
             response.set_cookie('ID', str(result[0]))
             response.set_cookie('Username', str(result[1]))
-            
-            return response
+
         # Otherwise user does not exist
         # Need to sign them up
         else:
@@ -112,8 +113,8 @@ def sign_up():
 
             response.set_cookie('ID', new_ID)
             response.set_cookie('Username', new_username)
-            
-        return render_template('index.html', user=result)
+        
+        return response
 
 
 @app.route('/patient_info', methods=['GET', 'POST'])
