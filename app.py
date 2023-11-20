@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
 
+from crypto import hash_password, generate_shared_secret, encrypt, decrypt
 
-from crypto import hash_password, AES
+import os
 
 app = Flask(__name__)
 
@@ -39,6 +40,10 @@ def check_credentials():
 
             response.set_cookie('ID', str(user[0]))
             response.set_cookie('Username', str(user[1]))
+
+            generate_shared_secret(input_password)
+
+            print(os.environ["SHARED_SECRET"])
 
             return response
         else:

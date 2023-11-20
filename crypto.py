@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
 
+import os
 
 # Function hash ALL PASSWORDS in database
 def salt_passwords():
@@ -33,30 +34,35 @@ def hash_password(password):
     return hash_pass
 
 
-class AES:
-    def __init__(self, password):
-        self.kdf = PBKDF2HMAC(
-                    algorithm=hashes.SHA256(),
-                    length=32,
-                    salt=b'salt',
-                    iterations=100000,
-                    backend=default_backend()
-                )
-        self.shared_secret = base64.urlsafe_b64encode(self.kdf.derive(password))
+def generate_shared_secret(password, salt=b'MySalt', iterations=100000, length=32):
+    backend = default_backend()
 
-    def aes_encrypt(self, message):
-        key = self.shared_secret
-        fernet = Fernet(key)
-        encrypted = fernet.encrypt(message.encode())
-        return encrypted
+    # Derive a key from the password using PBKDF2
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=length,
+        salt=salt,
+        iterations=iterations,
+        backend=backend
+    )
 
-    # Function to decrypt using AES
-    def aes_decrypt(self, encrypted):
-        key = self.shared_secret
-        fernet = Fernet(key)
-        decrypted = fernet.decrypt(encrypted)
-        return decrypted.decode()
-    
-    def print(self):
-        print("Shared Secret: ")
-        print(self.shared_secret)
+    # Generate the shared secret
+    shared_secret = kdf.derive(password.encode())
+
+    # Convert the shared secret to base64-encoded bytes
+    encoded_secret = base64.urlsafe_b64encode(shared_secret)
+
+    # Store the encoded shared secret in the environment variable
+    os.environ["SHARED_SECRET"] = encoded_secret.decode()
+
+    return encoded_secret
+
+def encrypt(data):
+    cipher_suite = Fernet(os.environ["SHARED_SECRET"].encode('utf-8'))
+    encrypted_data = cipher_suite.encrypt(data.encode('utf-8'))
+    return encrypted_data
+
+def decrypt(encrypted_data):
+    cipher_suite = Fernet(os.environ["SHARED_SECRET"].encode('utf-8'))
+    decrypted_data = cipher_suite.decrypt(encrypted_data).decode('utf-8')
+    return decrypted_data
