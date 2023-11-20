@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
 import random
-import hashlib
-from app.py import hash_password
+from crypto import hash_password
 
 app = Flask(__name__)
 

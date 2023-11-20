@@ -2,10 +2,9 @@ from flask import Flask, render_template, request, make_response, redirect, url_
 import sqlite3
 
 
-from crypto import hash_password
+from crypto import hash_password, AES
 
 app = Flask(__name__)
-
 
 @app.route('/', methods=['GET'])
 def index_page():
@@ -99,9 +98,10 @@ def sign_up():
 @app.route('/patient_info', methods=['GET', 'POST'])
 def display_info():
     # Check if 'ID' and 'Username' cookies are present
+
+
     if 'ID' in request.cookies and 'Username' in request.cookies:
         user_id = request.cookies.get('ID')
-        username = request.cookies.get('Username')
 
         with sqlite3.connect("db.sqlite3") as connection:
             cursor = connection.cursor()

@@ -2,10 +2,11 @@ import sqlite3
 
 import hashlib
 
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import base64
 
 
 # Function hash ALL PASSWORDS in database
@@ -31,26 +32,31 @@ def hash_password(password):
 
     return hash_pass
 
-class KeyStorage:
-    def __init__ (self):
-        self.private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
-        self.public_key = self.private_key.public.key()
 
-        
-    def set_public_key(self, public_key):
-        self.public_key = public_key
+class AES:
+    def __init__(self, password):
+        self.kdf = PBKDF2HMAC(
+                    algorithm=hashes.SHA256(),
+                    length=32,
+                    salt=b'salt',
+                    iterations=100000,
+                    backend=default_backend()
+                )
+        self.shared_secret = base64.urlsafe_b64encode(self.kdf.derive(password))
 
-    def set_private_key(self, private_key):
-        self.private_key = private_key
+    def aes_encrypt(self, message):
+        key = self.shared_secret
+        fernet = Fernet(key)
+        encrypted = fernet.encrypt(message.encode())
+        return encrypted
 
-    def get_public_key(self):
-        return self.public_key
-
-    def get_private_key(self):
-        return self.private_key
+    # Function to decrypt using AES
+    def aes_decrypt(self, encrypted):
+        key = self.shared_secret
+        fernet = Fernet(key)
+        decrypted = fernet.decrypt(encrypted)
+        return decrypted.decode()
     
-    def print_keys(self):
-        print("Private Key:")
-        print(self.private_key)
-        print("\nPublic Key:")
-        print(self.public_key)
+    def print(self):
+        print("Shared Secret: ")
+        print(self.shared_secret)
