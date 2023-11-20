@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
 
-import hashlib
+
+from crypto import hash_password
 
 app = Flask(__name__)
 
@@ -48,28 +49,6 @@ def check_credentials():
     return render_template('login.html', error=error)
 
 
-# Function hash ALL PASSWORDS in database
-def salt_passwords():
-    with sqlite3.connect("db.sqlite3") as connection:
-        cursor = connection.cursor()
-        cursor.execute("SELECT Username, Password FROM Credentials")
-        result = cursor.fetchall()
-
-        for user in result:
-            salted_password = hash_password(user[1])
-            cursor.execute("UPDATE Credentials SET Password = ? WHERE Username = ?", (salted_password, user[0]))
-
-
-# Function to get the result of hashing a password
-def hash_password(password):
-    # Encode for hashing to work
-    password = password.encode('utf-8')
-
-    hash = hashlib.sha256()         # Create Hashing object
-    hash.update(password)           # Apply hashing algorithm
-    hash_pass = hash.hexdigest()    # Use hex representation
-
-    return hash_pass
 
 @app.route('/sign_up')
 def sign_up_form():

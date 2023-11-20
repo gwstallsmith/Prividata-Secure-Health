@@ -11,7 +11,6 @@
 <nav>
     <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="#">About</a></li>
         {% if request.cookies.get('ID') or logged_in %}
         <li><a href="/patient_info">Patient Information</a></li>
         {% endif %}
