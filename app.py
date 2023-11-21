@@ -4,19 +4,15 @@ import random
 
 from crypto import hash_password, generate_shared_secret, encrypt, decrypt
 
-
 import os
 
 app = Flask(__name__)
-
-
 
 
 @app.route('/', methods=['GET'])
 def index_page():
     response = make_response(render_template('index.html', error = None))
     return response
-
 
 @app.route('/login', methods=['GET'])
 def login_page():
@@ -55,12 +51,22 @@ def check_credentials():
         
     return render_template('login.html', error=error)
 
+@app.route('/logout')
+def logout():
+    # Clear the cookies by creating a response and deleting the cookies
+    response = make_response(redirect(url_for('index_page')))  # Redirect to home page
+    response.set_cookie('ID', '', expires = 0)  # Clear 'ID' cookie
+    response.set_cookie('Username', '', expires = 0)  # Clear 'Username' cookie
+    return response
+
+
 @app.route('/sign_up')
 def sign_up_form():
     return render_template('sign_up.html')
         
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
+    sign_up_form()
     new_username = request.form['username']
     new_password = request.form['password']
 
@@ -129,25 +135,6 @@ def display_info():
     else:
         # If cookies are not present, redirect to login page or handle the situation accordingly
         return redirect('/login')
-
-
-def remove_user(id):
-    with sqlite3.connect("db.sqlite3") as connection:
-        cursor = connection.cursor()
-        cursor.execute("DELETE FROM Credentials WHERE ID = ?", (id,))
-
-
-def home():
-    return render_template('login.html')
-
-
-@app.route('/logout')
-def logout():
-    # Clear the cookies by creating a response and deleting the cookies
-    response = make_response(redirect(url_for('index_page')))  # Redirect to home page
-    response.set_cookie('ID', '', expires = 0)  # Clear 'ID' cookie
-    response.set_cookie('Username', '', expires = 0)  # Clear 'Username' cookie
-    return response
 
 
 if __name__ == '__main__':

@@ -74,3 +74,8 @@ def generateMoreUsers():
             cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (new_ID, first_name, last_name, gender, age, weight, height, encrypt(history)))
 
 
+def remove_user(id):
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM Credentials WHERE ID = ?", (id,))
+
