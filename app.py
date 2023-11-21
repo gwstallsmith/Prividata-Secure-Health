@@ -7,6 +7,40 @@ import os
 
 app = Flask(__name__)
 
+def delete_all():
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+
+        cursor.execute('DELETE FROM PatientInformation')
+        cursor.execute('DELETE FROM Credentials')
+
+        cursor.execute("INSERT INTO Credentials (ID, Username, Password) VALUES (?, ?, ?)", (2, "admin", hash_password("adpass")))
+        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (2, "Bilbo", "Baggins"))
+
+        cursor.execute("INSERT INTO Credentials (ID, Username, Password) VALUES (?, ?, ?)", (1, "notadmin", hash_password("adfail")))
+        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (, "Frodo", "Baggins"))
+
+
+@app.route('/more', methods=['GET', 'POST'])
+def updateData():
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+
+        maxID = cursor.execute("SELECT MAX(ID) FROM PatientInformation")
+        maxID = maxID.fetchone()[0]
+        
+        for user_id in range(3, maxID):
+            print(user_id)
+
+
+
+
+
+    response = make_response(render_template('index.html', error = None))
+    return response
+
+
+
 @app.route('/', methods=['GET'])
 def index_page():
     response = make_response(render_template('index.html', error = None))
@@ -43,16 +77,12 @@ def check_credentials():
 
             generate_shared_secret(input_password)
 
-            print(os.environ["SHARED_SECRET"])
-
             return response
         else:
             # Simulate an incorrect login
             error = "Invalid user credentials"
         
     return render_template('login.html', error=error)
-
-
 
 @app.route('/sign_up')
 def sign_up_form():
