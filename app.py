@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
-import random
 
 from crypto import hash_password, generate_shared_secret, encrypt, decrypt
 
-import os
 
 app = Flask(__name__)
 
