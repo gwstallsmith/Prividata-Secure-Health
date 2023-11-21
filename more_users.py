@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
 import random
-from crypto import hash_password
+from crypto import hash_password, generate_shared_secret, encrypt, decrypt
 
 app = Flask(__name__)
 
@@ -32,5 +32,45 @@ def generateMoreUsers():
             
             cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?)", (new_ID, first_name + last_name + str(new_ID), hash_password(first_name + last_name), False))
             cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (new_ID, first_name, last_name, gender, age, weight, height, history))
+
+
+def delete_all():
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+
+        cursor.execute('DELETE FROM PatientInformation')
+        cursor.execute('DELETE FROM Credentials')
+
+        cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (1, "admin", hash_password("adpass"), True))
+        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (1, "Bilbo", "Baggins"))
+
+        cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (2, "notadmin", hash_password("adfail"), False))
+        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (2, "Frodo", "Baggins"))
+
+    return
+
+@app.route('/more', methods=['GET', 'POST'])
+def generateMoreUsers():
+    delete_all()
+
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+
+        for _ in range(100):
+            first_name = random.choice(first_names)
+            last_name = random.choice(last_names)
+            gender = random.choice(genders)
+            age = random.randint(18, 80)
+            weight = random.randint(50, 100)
+            height = random.randint(150, 200)
+            history = random.choice(health_history)
+
+            generate_shared_secret(first_name + last_name)
+
+            cursor.execute("SELECT MAX(ID) FROM Credentials")
+            new_ID = cursor.fetchone()[0] + 1
+            
+            cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (new_ID, first_name + last_name + str(new_ID), hash_password(first_name + last_name), False))
+            cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (new_ID, first_name, last_name, gender, age, weight, height, encrypt(history)))
 
 

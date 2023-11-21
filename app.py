@@ -1,43 +1,14 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
+import random
 
 from crypto import hash_password, generate_shared_secret, encrypt, decrypt
+
 
 import os
 
 app = Flask(__name__)
 
-def delete_all():
-    with sqlite3.connect("db.sqlite3") as connection:
-        cursor = connection.cursor()
-
-        cursor.execute('DELETE FROM PatientInformation')
-        cursor.execute('DELETE FROM Credentials')
-
-        cursor.execute("INSERT INTO Credentials (ID, Username, Password) VALUES (?, ?, ?)", (2, "admin", hash_password("adpass")))
-        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (2, "Bilbo", "Baggins"))
-
-        cursor.execute("INSERT INTO Credentials (ID, Username, Password) VALUES (?, ?, ?)", (1, "notadmin", hash_password("adfail")))
-        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name) VALUES (?, ?, ?)", (, "Frodo", "Baggins"))
-
-
-@app.route('/more', methods=['GET', 'POST'])
-def updateData():
-    with sqlite3.connect("db.sqlite3") as connection:
-        cursor = connection.cursor()
-
-        maxID = cursor.execute("SELECT MAX(ID) FROM PatientInformation")
-        maxID = maxID.fetchone()[0]
-        
-        for user_id in range(3, maxID):
-            print(user_id)
-
-
-
-
-
-    response = make_response(render_template('index.html', error = None))
-    return response
 
 
 
@@ -152,7 +123,9 @@ def display_info():
             else:
                 # User is not an admin, display single user
                 user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
-                return render_template('patient_info.html', user = user_data)
+                user_data_decrypt = user_data + (decrypt(user_data[7]),)
+                print(user_data_decrypt[8])
+                return render_template('patient_info.html', user = user_data_decrypt)
     else:
         # If cookies are not present, redirect to login page or handle the situation accordingly
         return redirect('/login')
