@@ -126,21 +126,53 @@ def display_info():
 
             if user and user[3]:
                 # User is an admin, display all users
-                all_users = cursor.execute("SELECT * FROM PatientInformation").fetchall()
-                return render_template('patient_info.html', users = all_users)
+                forms = cursor.execute("SELECT * FROM PatientInformation").fetchall()
+                return render_template('patient_info.html', users = forms)
             else:
                 # User is not an admin, display single user
                 user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
-                
+        
                 try:
-                    user_data_decrypt = user_data + (decrypt(user_data[7]),)
+                    user_data_decrypt = user_data + (decrypt(user_data[7]) if decrypt(user_data[7]) else '',)
                 except KeyError:
-                    return render_template('login.html', error="Shared secret expired")
+                    return render_template('login.html', error = "Shared secret expired")
 
                 return render_template('patient_info.html', user = user_data_decrypt)
     else:
         # If cookies are not present, redirect to login page or handle the situation accordingly
         return redirect('/login')
+    
+
+@app.route('/update_user', methods=['POST'])
+def update_user():
+    user_id = request.form.get('id')
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    gender = request.form['gender']
+    age = request.form['age']
+    weight = request.form['weight']
+    height = request.form['height']
+    health_history = encrypt(request.form['health_history'])
+    print(health_history)
+    # NEED TRY AND EXCEPT #
+
+    # Update user in the database
+    query = """
+    UPDATE PatientInformation 
+    SET First_Name = ?, Last_Name = ?, Gender = ?, Age = ?, Weight = ?, Height = ?, Health_History = ? 
+    WHERE ID = ?
+    """
+
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+        cursor.execute(query, (first_name, last_name, gender, age, weight, height, health_history, user_id))
+        connection.commit()
+    
+    return redirect('/patient_info')
+
+@app.route('/more', methods=['POST', 'GET'])
+def more():
+    remove_history(2)
 
 
 if __name__ == '__main__':

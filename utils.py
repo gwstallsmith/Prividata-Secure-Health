@@ -79,3 +79,9 @@ def remove_user(id):
         cursor = connection.cursor()
         cursor.execute("DELETE FROM Credentials WHERE ID = ?", (id,))
 
+
+def remove_history(id):
+    with sqlite3.connect("db.sqlite3") as connection:
+        cursor = connection.cursor()
+        cursor.execute("UPDATE PatientInformation SET Health_History = NULL WHERE ID = ?", (id,))
+

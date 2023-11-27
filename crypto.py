@@ -67,6 +67,7 @@ def decrypt(encrypted_data):
         return
     
     cipher_suite = Fernet(os.environ["SHARED_SECRET"].encode('utf-8'))
+    print(encrypted_data)
     decrypted_data = cipher_suite.decrypt(encrypted_data).decode('utf-8')
     return decrypted_data
 
