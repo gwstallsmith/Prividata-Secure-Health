@@ -131,8 +131,12 @@ def display_info():
             else:
                 # User is not an admin, display single user
                 user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
-                user_data_decrypt = user_data + (decrypt(user_data[7]),)
-                print(user_data_decrypt[8])
+                
+                try:
+                    user_data_decrypt = user_data + (decrypt(user_data[7]),)
+                except KeyError:
+                    return render_template('login.html', error="Shared secret expired")
+
                 return render_template('patient_info.html', user = user_data_decrypt)
     else:
         # If cookies are not present, redirect to login page or handle the situation accordingly
