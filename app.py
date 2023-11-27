@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
 
-from crypto import hash_password, generate_shared_secret, encrypt, decrypt
+from crypto import *
+from utils import *
 
 
 app = Flask(__name__)
@@ -86,6 +87,8 @@ def sign_up():
 
             response.set_cookie('ID', str(result[0]))
             response.set_cookie('Username', str(result[1]))
+            generate_shared_secret(new_password)
+
 
         # Otherwise user does not exist
         # Need to sign them up
@@ -101,7 +104,8 @@ def sign_up():
 
             response.set_cookie('ID', new_ID)
             response.set_cookie('Username', new_username)
-        
+            generate_shared_secret(new_password)
+
         return response
 
 

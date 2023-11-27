@@ -50,12 +50,12 @@ def generate_shared_secret(password, salt=b'MySalt', iterations=100000, length=3
     shared_secret = kdf.derive(password.encode())
 
     # Convert the shared secret to base64-encoded bytes
+
     encoded_secret = base64.urlsafe_b64encode(shared_secret)
 
     # Store the encoded shared secret in the environment variable
-    os.environ["SHARED_SECRET"] = encoded_secret.decode()
 
-    return encoded_secret
+    os.environ["SHARED_SECRET"] = encoded_secret.decode()
 
 def encrypt(data):
     cipher_suite = Fernet(os.environ["SHARED_SECRET"].encode('utf-8'))
@@ -63,6 +63,10 @@ def encrypt(data):
     return encrypted_data
 
 def decrypt(encrypted_data):
+    if not encrypted_data:
+        return
+    
     cipher_suite = Fernet(os.environ["SHARED_SECRET"].encode('utf-8'))
     decrypted_data = cipher_suite.decrypt(encrypted_data).decode('utf-8')
     return decrypted_data
+
