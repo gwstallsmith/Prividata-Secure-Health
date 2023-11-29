@@ -128,13 +128,18 @@ def display_info():
                 # User is an admin, display all users
                 forms = cursor.execute("SELECT * FROM PatientInformation").fetchall()
                 admin_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user[0],)).fetchone()
-                admin_data = admin_data + (decrypt(admin_data[7]) if decrypt(admin_data[7]) else '',)
+
+                try:
+                    admin_data = admin_data + (admin_data[0],) + (decrypt(admin_data[1]),) + (decrypt(admin_data[2]),) + (decrypt(admin_data[3]),) + (admin_data[4],) + (admin_data[5],) + (admin_data[6],) + (decrypt(admin_data[7]),)
+                except KeyError:
+                    return render_template('login.html', error = "Shared secret expired.")
+                
                 return render_template('patient_info.html', users = forms, id = user[0], admin = admin_data)
             else:
                 # User is not an admin, display single user
                 user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
                 try:
-                    user_data_decrypt = user_data + (decrypt(user_data[7]) if decrypt(user_data[7]) else '',)
+                    user_data_decrypt = user_data + (user_data[0],) + (decrypt(user_data[1]),) + (decrypt(user_data[2]),) + (decrypt(user_data[3]),) + (user_data[4],) + (user_data[5],) + (user_data[6],) + (decrypt(user_data[7]),)
                 except KeyError:
                     return render_template('login.html', error = "Shared secret expired.")
                 
@@ -151,6 +156,7 @@ def update_user():
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     gender = request.form['gender']
+
     age = request.form['age']
     weight = request.form['weight']
     height = request.form['height']
