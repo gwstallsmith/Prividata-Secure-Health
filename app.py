@@ -102,7 +102,7 @@ def sign_up():
 
             response = make_response(render_template('index.html', user=result, logged_in=True))
 
-            response.set_cookie('ID', new_ID)
+            response.set_cookie('ID', str(new_ID))
             response.set_cookie('Username', new_username)
             generate_shared_secret(new_password)
 
