@@ -1,8 +1,8 @@
-# Data Security and Privacy Project
+# Prividata Secure Health
 
 ## Overview
 
-Welcome to the Data Security and Privacy Project! This project is dedicated to ensuring the protection of sensitive data and the privacy of individuals through robust security measures and best practices. This README provides an introduction to the project, its goals, and guidelines for contributors.
+Welcome to the Prividata Secure Health! This project is dedicated to ensuring the protection of sensitive data and the privacy of individuals through robust security measures and best practices. PSH was made as a project for our Data Security and Privacy class. This README provides an introduction to the project, its goals, and guidelines for contributors.
 
 ## Table of Contents
 
