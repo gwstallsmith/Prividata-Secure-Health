@@ -58,6 +58,9 @@ def generate_shared_secret(password, salt=b'MySalt', iterations=100000, length=3
     os.environ["SHARED_SECRET"] = encoded_secret.decode()
 
 def encrypt(data):
+    if not data:
+        return
+
     cipher_suite = Fernet(os.environ["SHARED_SECRET"].encode('utf-8'))
     encrypted_data = cipher_suite.encrypt(data.encode('utf-8'))
     return encrypted_data
@@ -67,7 +70,6 @@ def decrypt(encrypted_data):
         return
     
     cipher_suite = Fernet(os.environ["SHARED_SECRET"].encode('utf-8'))
-    print(encrypted_data)
     decrypted_data = cipher_suite.decrypt(encrypted_data).decode('utf-8')
     return decrypted_data
 

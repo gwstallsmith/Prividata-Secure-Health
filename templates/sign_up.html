@@ -9,20 +9,27 @@
 </head>
 
 {% include 'navbar.html' %}
-<body>
-  <h1>Sign-up</h1>
-  <form id="frmLogin" method="POST", action="/sign_up">
-      <label for="inputFirstName">First name:</label>
-      <input type="text" id="inputFirstName" name="firstname" required><br>
-      <label for="inputLastName">Last name:</label>
-      <input type="text" id="inputLastName" name="lastname" required><br>
 
-      <label for="inputUsername">New username:</label>
-      <input type="text" id="inputUsername" name="username" required><br>
-      <label for="inputPassword">New password:</label>
-      <input type="password" id="inputPassword" name="password" required><br>
+<body>
+  <div class="user-box" style="text-align:center; padding:1%">
+    <h1>Sign-up</h1>
+  </div>
+
+  <form id="frmLogin" method="POST" , action="/sign_up">
+    <div class="user-box login">
+
+      <label class="login-box" for="inputFirstName">First name:</label>
+      <input class="login-box" type="text" id="inputFirstName" name="firstname" required><br>
+      <label class="login-box" for="inputLastName">Last name:</label>
+      <input class="login-box" type="text" id="inputLastName" name="lastname" required><br>
+      <label class="login-box" for="inputUsername">New username:</label>
+      <input class="login-box" type="text" id="inputUsername" name="username" required><br>
+      <label class="login-box" for="inputPassword">New password:</label>
+      <input class="login-box" type="password" id="inputPassword" name="password" required><br>
       <input type="submit" value="Sign-up">
   </form>
+  </div>
+
 </body>
 
 

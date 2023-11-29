@@ -11,17 +11,27 @@
 {% include 'navbar.html' %}
 <body>
   {% if request.cookies.get('ID') or logged_in %}
+    <div class="user-box" style="text-align:center; padding:1%">
       <h1>Welcome, {{ user[1] if logged_in else request.cookies.get('Username')}}!</h1>
+    </div>
       <!-- Your content for logged-in users here -->
   {% else %}
-    <h1>Welcome to Prividata Secure Health</h1>
+    <div class="user-box" style="text-align:center; padding:1%">
+      <h1>Welcome to Prividata Secure Health</h1>
+    </div>
+
       <!-- Your content for guests here -->
   {% endif %}
 </body>
 <body>
-  <p>Prividata Secure Health is an encrypted database designed to securely store medical records.</p>
-  <p>Our platform utilizes state-of-the-art encryption algorithms to ensure the confidentiality and integrity of your medical information. With strict access controls and comprehensive security measures, we prioritize the protection of sensitive data. Whether you're a healthcare provider or an individual seeking a secure repository for medical records, Prividata Secure Health offers a reliable solution.</p>
-
+  <div class="user-box">
+    <div class="info-row">
+      <p>Prividata Secure Health is an encrypted database designed to securely store medical records.</p>
+      <p>Our platform utilizes state-of-the-art encryption algorithms to ensure the confidentiality and integrity of your medical information.</p>
+      <p>With strict access controls and comprehensive security measures, we prioritize the protection of sensitive data.</p>
+      <p>Whether you're a healthcare provider or an individual seeking a secure repository for medical records, Prividata Secure Health offers a reliable solution.</p>
+    </div>
+  </div>
 
   </body>
 

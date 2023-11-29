@@ -127,15 +127,17 @@ def display_info():
             if user and user[3]:
                 # User is an admin, display all users
                 forms = cursor.execute("SELECT * FROM PatientInformation").fetchall()
-                return render_template('patient_info.html', users = forms)
+                admin_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user[0],)).fetchone()
+                admin_data = admin_data + (decrypt(admin_data[7]) if decrypt(admin_data[7]) else '',)
+                return render_template('patient_info.html', users = forms, id = user[0], admin = admin_data)
             else:
                 # User is not an admin, display single user
                 user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
-        
                 try:
                     user_data_decrypt = user_data + (decrypt(user_data[7]) if decrypt(user_data[7]) else '',)
                 except KeyError:
-                    return render_template('login.html', error = "Shared secret expired")
+                    return render_template('login.html', error = "Shared secret expired.")
+                
 
                 return render_template('patient_info.html', user = user_data_decrypt)
     else:
@@ -145,16 +147,19 @@ def display_info():
 
 @app.route('/update_user', methods=['POST'])
 def update_user():
-    user_id = request.form.get('id')
+    user_id = request.cookies.get('ID')
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     gender = request.form['gender']
     age = request.form['age']
     weight = request.form['weight']
     height = request.form['height']
-    health_history = encrypt(request.form['health_history'])
-    print(health_history)
-    # NEED TRY AND EXCEPT #
+
+    try:
+        health_history = encrypt(request.form['health_history'])
+    except KeyError:
+        return render_template('login.html', error = "Shared secret expired.")
+    
 
     # Update user in the database
     query = """
@@ -172,7 +177,7 @@ def update_user():
 
 @app.route('/more', methods=['POST', 'GET'])
 def more():
-    remove_history(2)
+    None
 
 
 if __name__ == '__main__':

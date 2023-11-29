@@ -1,8 +1,21 @@
+:root {
+    --ub-color: #121212; /* Dark background color */
+    --bg-color: #1E1E1E;
+    --text-color: #FFFFFF; /* White text color */
+    --accent-color: #FF5252; /* Red as accent color */
+    --secondary-color: #2196F3; /* Blue as a complementary color */
+    --highlight-color: #FF1744; /* Darker red for highlights */
+  }
+
 /* CSS for styling the box */
 .user-box {
-    border: 1px solid #ccc;
+    border: 1px solid var(--highlight-color);
     padding: 10px;
-    margin-bottom: 10px;
+    margin:2%;
+    padding:5%;
+    padding-top:0%;
+    padding-bottom:0%;
+    background-color: var(--ub-color);
 }
 
 /* CSS for styling the title */
@@ -17,24 +30,44 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    padding:2%;
 }
 
 /* CSS for individual entries within each row */
 .user-box .info-row > div {
     width: 48%; /* Adjust the width as needed */
-    margin-bottom: 10px;
+}
+
+.login {
+    padding:5%;
+}
+
+.login-box {
+    margin-bottom:2%;
+}
+
+textarea {
+    width:600px;
+    height:200px;
 }
 
 /* Basic styles for the navigation bar */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 2%;
+    background-color: var(--bg-color);
 }
 nav {
-    background-color: #333;
+    background-color: var(--ub-color);
     color: white;
     text-align: center;
+
+    border: 1px solid var(--highlight-color);
+}
+
+p {
+    word-wrap:break-word;
 }
 
 nav ul {
@@ -54,22 +87,24 @@ nav ul li a {
     color: white;
     padding: 10px 15px;
     display: inline-block;
+
 }
 
 nav ul li a:hover {
-    background-color: #555;
+    background-color: var(--accent-color);
 }
 
 /* Dropdown styles */
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #333;
+    background-color: var(--bg-color);
     min-width: 160px;
     z-index: 1;
     padding: 0;
     margin-top: 0px;
     border-radius: 0 0 5px 5px;
+    
 }
 
 .dropdown-content a {
@@ -81,9 +116,20 @@ nav ul li a:hover {
 
 .dropdown:hover .dropdown-content {
     display: block;
+    border-radius: 0 0 5px 5px;
+
 }
 
 /* Style the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-    background-color: #555;
+    background-color: var(--accent-color);
+}
+
+button[type="submit"],
+input[type="submit"] {
+    margin-top:2%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }

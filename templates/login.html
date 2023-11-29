@@ -11,16 +11,20 @@
 {% include 'navbar.html' %}
 
 <body>
-  <h1>Login</h1>
+  <div class="user-box" style="text-align:center; padding:1%">
+    <h1>Login</h1>
+  </div>
   <form id="frmLogin" method="POST", action="/check_credentials">
-      <label for="inputUsername">Username:</label>
-      <input type="text" id="inputUsername" name="username" required><br>
-      <label for="inputPassword">Password:</label>
-      <input type="password" id="inputPassword" name="password" required><br>
+    <div class="user-box login">
+      <label class="login-box" for="inputUsername">Username:</label>
+      <input class="login-box" type="text" id="inputUsername" name="username" required><br>
+      <label class="login-box" for="inputPassword">Password:</label>
+      <input class="login-box" type="password" id="inputPassword" name="password" required><br>
       {% if error %}
       <p style="color: red;">{{ error }}</p>
       {% endif %}
       <input type="submit" value="Login">
+    </div>
   </form>
 
   <p id="messageSucc" class="message"></p>

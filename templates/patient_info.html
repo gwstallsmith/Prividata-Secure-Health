@@ -10,13 +10,13 @@
 <body>
     <div class="info-container">
         {% if user %}
+        <div class="user-box" style="text-align:center; padding:1%">
+            <h1 style="text-align:center;">User Information</h1>
+        </div>
+      
             <form method = "POST" action = "/update_user">
                 <div class="user-box">
-                    <h2>User Information</h2>
                     <div class="info-row">
-                        <div>
-                            <input type="hidden" name="id" value="{{ user[0] }}">
-                        </div>
                         <div>
                             <h3>First Name</h3>
                             <input type="text" name="first_name" class="form-control" value="{{ user[1] }}">
@@ -47,13 +47,13 @@
                         </div>
                         <!-- Include other fields for all users -->
                     </div>
+                    <button type="submit" style="margin-bottom:5%;">Update</button>
+
                 </div>
-                <button type="submit">Update</button>
             </form>
         {% elif users %}
             {% for row in users %}
                 <div class="user-box">
-                    <h2>User Information</h2>
                     <div class="info-row">
                         <div>
                             <h3>First Name</h3>
