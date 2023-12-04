@@ -124,7 +124,7 @@ def display_info():
             cursor.execute("SELECT * FROM Credentials WHERE ID = ?", (user_id,))
             user = cursor.fetchone()
 
-            if user and user[3]:
+            if user and user[3] == 2:
                 # User is an admin, display all users
                 forms = cursor.execute("SELECT * FROM PatientInformation").fetchall()
                 admin_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user[0],)).fetchone()
@@ -183,7 +183,7 @@ def update_user():
 
 @app.route('/more', methods=['POST', 'GET'])
 def more():
-    None
+    generate_more_users()
 
 
 if __name__ == '__main__':

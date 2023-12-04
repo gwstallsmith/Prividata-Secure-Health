@@ -20,14 +20,23 @@ def delete_all():
         cursor = connection.cursor()
 
         cursor.execute('DELETE FROM PatientInformation')
+        cursor.execute('DROP TABLE IF EXISTS PatientInformation')
+        cursor.execute('CREATE TABLE IF NOT EXISTS PatientInformation (ID INTEGER PRIMARY KEY, First_Name TEXT, Last_Name TEXT, Gender TEXT, Age INTEGER, Weight INTEGER, Height INTEGER, Health_History TEXT)')
+        
         cursor.execute('DELETE FROM Credentials')
+        cursor.execute('DROP TABLE IF EXISTS Credentials')
+        cursor.execute('CREATE TABLE IF NOT EXISTS Credentials (ID INTEGER PRIMARY KEY, Username TEXT, Password TEXT, IsAdmin INTEGER, FOREIGN KEY (ID) REFERENCES PatientInformation(ID))')
+
 
         generate_shared_secret("adpass")
-        cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (1, "admin", hash_password("adpass"), True))
+
+        cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (1, "admin", hash_password("adpass"), 2))
+
         cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (1, encrypt("Bilbo"), encrypt("Baggins"), encrypt("Male"), 50, 30, 120, encrypt("Living an alternative lifestyle with Golem.")))
 
         generate_shared_secret("adfail")
-        cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (2, "notadmin", hash_password("adfail"), False))
+
+        cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (2, "notadmin", hash_password("adfail"), 1))
         cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (2, encrypt("Frodo"), encrypt("Baggins"), encrypt("Male"), 50, 30, 120, encrypt("Died of cringe.")))
 
     return
@@ -61,7 +70,7 @@ def generate_more_users():
             cursor.execute("SELECT MAX(ID) FROM Credentials")
             new_ID = cursor.fetchone()[0] + 1
             
-            cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (new_ID, first_name + last_name + str(new_ID), hash_password(first_name + last_name), False))
+            cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (new_ID, first_name + last_name + str(new_ID), hash_password(first_name + last_name), 0))
             cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (new_ID, encrypt(first_name), encrypt(last_name), encrypt(gender), age, weight, height, encrypt(history)))
 
 
