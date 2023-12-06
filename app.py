@@ -138,13 +138,18 @@ def display_info():
             else:
                 # User is not an admin, display single user
                 user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
+
                 try:
                     user_data_decrypt = user_data + (user_data[0],) + (decrypt(user_data[1]),) + (decrypt(user_data[2]),) + (decrypt(user_data[3]),) + (user_data[4],) + (user_data[5],) + (user_data[6],) + (decrypt(user_data[7]),)
                 except KeyError:
                     return render_template('login.html', error = "Shared secret expired.")
-                
 
-                return render_template('patient_info.html', user = user_data_decrypt)
+                if verify_mac(decrypt(user_data[7]), decrypt(user_data[8])):
+                    return render_template('patient_info.html', user = user_data_decrypt)
+                else:
+                    error = "MAC verification failed. Data integrity not guaranteed."
+                    return render_template('patient_info.html', user = user_data_decrypt, error = error)
+
     else:
         # If cookies are not present, redirect to login page or handle the situation accordingly
         return redirect('/login')
@@ -167,22 +172,27 @@ def update_user():
         return render_template('login.html', error = "Shared secret expired.")
     
 
+    print(request.form['health_history'])
+
+    mac = encrypt(generate_mac(request.form['health_history']))
+
     # Update user in the database
     query = """
     UPDATE PatientInformation 
-    SET First_Name = ?, Last_Name = ?, Gender = ?, Age = ?, Weight = ?, Height = ?, Health_History = ? 
+    SET First_Name = ?, Last_Name = ?, Gender = ?, Age = ?, Weight = ?, Height = ?, Health_History = ?, MAC = ?
     WHERE ID = ?
     """
 
     with sqlite3.connect("db.sqlite3") as connection:
         cursor = connection.cursor()
-        cursor.execute(query, (first_name, last_name, gender, age, weight, height, health_history, user_id))
+        cursor.execute(query, (encrypt(first_name), encrypt(last_name), encrypt(gender), age, weight, height, health_history, mac, user_id))
         connection.commit()
     
     return redirect('/patient_info')
 
 @app.route('/more', methods=['POST', 'GET'])
 def more():
+    return
     generate_more_users()
 
 

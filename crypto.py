@@ -1,6 +1,7 @@
 import sqlite3
 
 import hashlib
+import hmac
 
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
@@ -73,3 +74,11 @@ def decrypt(encrypted_data):
     decrypted_data = cipher_suite.decrypt(encrypted_data).decode('utf-8')
     return decrypted_data
 
+def generate_mac(data):
+    mac = hmac.new(os.environ["SHARED_SECRET"].encode('utf-8'), data.encode('utf-8'), hashlib.sha256).digest()
+    mac = mac.hex()
+    return mac
+
+def verify_mac(data, stored_mac):
+    test_mac = generate_mac(data)
+    return hmac.compare_digest(test_mac, stored_mac)

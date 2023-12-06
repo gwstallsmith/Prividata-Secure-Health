@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
 import sqlite3
 import random
+import math
 from crypto import *
 
 app = Flask(__name__)
@@ -21,7 +22,7 @@ def delete_all():
 
         cursor.execute('DELETE FROM PatientInformation')
         cursor.execute('DROP TABLE IF EXISTS PatientInformation')
-        cursor.execute('CREATE TABLE IF NOT EXISTS PatientInformation (ID INTEGER PRIMARY KEY, First_Name TEXT, Last_Name TEXT, Gender TEXT, Age INTEGER, Weight INTEGER, Height INTEGER, Health_History TEXT)')
+        cursor.execute('CREATE TABLE IF NOT EXISTS PatientInformation (ID INTEGER PRIMARY KEY, First_Name TEXT, Last_Name TEXT, Gender TEXT, Age INTEGER, Weight INTEGER, Height INTEGER, Health_History TEXT, MAC TEXT)')
         
         cursor.execute('DELETE FROM Credentials')
         cursor.execute('DROP TABLE IF EXISTS Credentials')
@@ -29,15 +30,18 @@ def delete_all():
 
 
         generate_shared_secret("adpass")
+        history = "Living an alternative lifestyle with Golem."
+
 
         cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (1, "admin", hash_password("adpass"), 2))
+        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History, MAC) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (1, encrypt("Bilbo"), encrypt("Baggins"), encrypt("Male"), 50, 30, 120, encrypt(history), encrypt(generate_mac(history))))
 
-        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (1, encrypt("Bilbo"), encrypt("Baggins"), encrypt("Male"), 50, 30, 120, encrypt("Living an alternative lifestyle with Golem.")))
 
         generate_shared_secret("adfail")
+        history = "Died of cringe."
 
         cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (2, "notadmin", hash_password("adfail"), 1))
-        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (2, encrypt("Frodo"), encrypt("Baggins"), encrypt("Male"), 50, 30, 120, encrypt("Died of cringe.")))
+        cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History, MAC) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (2, encrypt("Frodo"), encrypt("Baggins"), encrypt("Male"), 50, 30, 120, encrypt(history), encrypt(generate_mac(history))))
 
     return
 
@@ -55,10 +59,6 @@ def generate_more_users():
 
 
             age = random.randint(4, 16) * 5
-            
-            #age = str(age) + " <= " + "Age" + " < " + str(age + 5)
-            
-
             weight = random.randint(2, 10) * 10
             height = random.randint(15, 20) * 10
 
@@ -71,7 +71,7 @@ def generate_more_users():
             new_ID = cursor.fetchone()[0] + 1
             
             cursor.execute("INSERT INTO Credentials (ID, Username, Password, IsAdmin) VALUES (?, ?, ?, ?)", (new_ID, first_name + last_name + str(new_ID), hash_password(first_name + last_name), 0))
-            cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (new_ID, encrypt(first_name), encrypt(last_name), encrypt(gender), age, weight, height, encrypt(history)))
+            cursor.execute("INSERT INTO PatientInformation (ID, First_Name, Last_Name, Gender, Age, Weight, Height, Health_History, MAC) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (new_ID, encrypt(first_name), encrypt(last_name), encrypt(gender), age, weight, height, encrypt(history), encrypt(generate_mac(history))))
 
 
 def remove_user(id):
@@ -85,3 +85,8 @@ def remove_history(id):
         cursor = connection.cursor()
         cursor.execute("UPDATE PatientInformation SET Health_History = NULL WHERE ID = ?", (id,))
 
+def round_down_ten(hw):
+    return math.floor(hw / 10) * 10
+
+def round_down_five(age):
+    return math.floor(age / 5) * 5

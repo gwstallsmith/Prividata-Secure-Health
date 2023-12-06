@@ -14,6 +14,9 @@
         {% if user %}
         <div class="user-box" style="text-align:center; padding:1%">
             <h1 style="text-align:center;">User Information</h1>
+            {% if error %}
+            <p style="color: red;">{{ error }}</p>
+            {% endif %}      
         </div>
 
         <form method="POST" action="/update_user">
@@ -21,31 +24,31 @@
                 <div class="info-row">
                     <div>
                         <h3>First Name</h3>
-                        <input type="text" name="first_name" class="form-control" value="{{ user[9] }}">
+                        <input type="text" name="first_name" class="form-control" value="{{ user[10] }}">
                     </div>
                     <div>
                         <h3>Last Name</h3>
-                        <input type="text" name="last_name" class="form-control" value="{{ user[10] }}">
+                        <input type="text" name="last_name" class="form-control" value="{{ user[11] }}">
                     </div>
                     <div>
                         <h3>Gender</h3>
-                        <input type="text" name="gender" class="form-control" value="{{ user[11] }}">
+                        <input type="text" name="gender" class="form-control" value="{{ user[12] }}">
                     </div>
                     <div>
                         <h3>Age</h3>
-                        <input type="number" name="age" class="form-control" value="{{ user[12] }}">
+                        <input type="number" name="age" class="form-control" value="{{ user[13] }}">
                     </div>
                     <div>
                         <h3>Weight</h3>
-                        <input type="number" name="weight" class="form-control" value="{{ user[13] }}"> kg
+                        <input type="number" name="weight" class="form-control" value="{{ user[14] }}"> kg
                     </div>
                     <div>
                         <h3>Height</h3>
-                        <input type="number" name="height" class="form-control" value="{{ user[14] }}"> cm
+                        <input type="number" name="height" class="form-control" value="{{ user[15] }}"> cm
                     </div>
                     <div>
                         <h3>Health History</h3>
-                        <textarea name="health_history" class="form-control">{{ user[15] }}</textarea>
+                        <textarea name="health_history" class="form-control">{{ user[16] }}</textarea>
                     </div>
                     <!-- Include other fields for all users -->
                 </div>
