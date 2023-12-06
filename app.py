@@ -124,7 +124,7 @@ def display_info():
             cursor.execute("SELECT * FROM Credentials WHERE ID = ?", (user_id,))
             user = cursor.fetchone()
 
-            if user and user[3] == 2:
+            if user and (user[3] == 2 or user[3] == 1):
                 # User is an admin, display all users
                 forms = cursor.execute("SELECT * FROM PatientInformation").fetchall()
                 admin_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user[0],)).fetchone()
@@ -134,7 +134,8 @@ def display_info():
                 except KeyError:
                     return render_template('login.html', error = "Shared secret expired.")
                 
-                return render_template('patient_info.html', users = forms, id = user[0], admin = admin_data)
+                
+                return render_template('patient_info.html', users = forms, id = user[0], admin = admin_data, isAdmin = user[3])
             else:
                 # User is not an admin, display single user
                 user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
