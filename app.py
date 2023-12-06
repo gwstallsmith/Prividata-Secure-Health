@@ -162,9 +162,9 @@ def update_user():
     last_name = request.form['last_name']
     gender = request.form['gender']
 
-    age = request.form['age']
-    weight = request.form['weight']
-    height = request.form['height']
+    age = round_down_ten(int(request.form['age']))
+    weight = round_down_ten(int(request.form['weight']))
+    height = round_down_ten(int(request.form['height']))
 
     try:
         health_history = encrypt(request.form['health_history'])

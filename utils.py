@@ -87,6 +87,3 @@ def remove_history(id):
 
 def round_down_ten(hw):
     return math.floor(hw / 10) * 10
-
-def round_down_five(age):
-    return math.floor(age / 5) * 5
