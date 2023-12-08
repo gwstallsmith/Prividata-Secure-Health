@@ -113,7 +113,6 @@ def sign_up():
 def display_info():
     # Check if 'ID' and 'Username' cookies are present
 
-
     if 'ID' in request.cookies and 'Username' in request.cookies:
         user_id = request.cookies.get('ID')
 
@@ -140,13 +139,15 @@ def display_info():
                 # User is not an admin, display single user
                 user_data = cursor.execute("SELECT * FROM PatientInformation WHERE ID = ?", (user_id,)).fetchone()
 
+                error = check_query_complete(user_data)
+
                 try:
                     user_data_decrypt = user_data + (user_data[0],) + (decrypt(user_data[1]),) + (decrypt(user_data[2]),) + (decrypt(user_data[3]),) + (user_data[4],) + (user_data[5],) + (user_data[6],) + (decrypt(user_data[7]),)
                 except KeyError:
                     return render_template('login.html', error = "Shared secret expired.")
 
                 if verify_mac(decrypt(user_data[7]), decrypt(user_data[8])):
-                    return render_template('patient_info.html', user = user_data_decrypt)
+                    return render_template('patient_info.html', user = user_data_decrypt, error = error)
                 else:
                     error = "MAC verification failed. Data integrity not guaranteed."
                     return render_template('patient_info.html', user = user_data_decrypt, error = error)
@@ -195,6 +196,14 @@ def update_user():
 def more():
     return
     generate_more_users()
+
+
+def check_query_complete(user_data):
+    for data in user_data:
+        if not data:
+            return "Query incomplete"
+        
+    return None
 
 
 if __name__ == '__main__':
